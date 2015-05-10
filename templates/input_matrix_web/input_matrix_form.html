@@ -1,0 +1,27 @@
+<!-- Шаблон для ввода матрицы 
+	Контекст - класс MatrixSizesForm - matrix
+-->
+{%extends "base.html" %}
+{% load tags %}
+
+{%block content %}
+		
+		<h1> Input Matrix </h1>
+		<form action="set_matrix" method="POST">
+		
+		<table>
+			{%for row in matrix.number_rows|get_range%}
+				<tr>
+					{% for column in matrix.number_column|get_range %}
+						<td>
+							<input type="text" value='{{matrix.default_value}}' name='_matrix_{{row}}_{{column}}' id='id_matrix_{{row}}_{{column}}'>
+						</td>
+					{%endfor%}
+				</tr>
+			{%endfor%}
+		</table>
+
+		<input type="submit" value="отправить">		
+		</form>
+
+{%endblock %}

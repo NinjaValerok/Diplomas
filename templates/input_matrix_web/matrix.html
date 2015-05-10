@@ -1,0 +1,20 @@
+<!-- Шаблон для представления матрицы матрицы 
+	Контекст - список : matrix,строка: matrix_name, div_id,  table_id,
+-->
+
+
+<div id="{{div_id}}">
+	<h3> It's a {{matrix_name}} matrix :</h3>
+	<table id="{{table_id}}">
+		{%for row_matrix in matrix%}
+		<tr>
+			{% for value in row_matrix %}
+				<th>
+					{{value}}
+				</th>
+			{%endfor%}
+		</tr>			
+
+		{%endfor%}
+	</table>		
+</div>
