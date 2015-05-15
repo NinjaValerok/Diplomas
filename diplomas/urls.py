@@ -16,9 +16,15 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from input_matrix_web import views as inmatweb
+from load_matrix import views as load
+from django.conf import settings
+from django.conf.urls.static import static
+
+
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'set_sizes_matrix^$', inmatweb.set_sizes),
+    url(r'set_sizes$', inmatweb.set_sizes),
     url(r'^set_matrix$', inmatweb.set_matrix),
-    #url(r'^$', inmatweb.test)
+    url(r'^load$', load.upload_file),
+    url(r'^set_subsystem$', load.set_subsystem),
 ]

@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'input_matrix_web',
     'tags',
+    'load_matrix',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -103,3 +104,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.MemoryFileUploadHandler",
+ "django.core.files.uploadhandler.TemporaryFileUploadHandler",)

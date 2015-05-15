@@ -8,7 +8,7 @@
 		
 		<h1> Input Matrix </h1>
 		<form action="set_matrix" method="POST">
-		
+		{% csrf_token %}
 		<table>
 			{%for row in matrix.number_rows|get_range%}
 				<tr>
