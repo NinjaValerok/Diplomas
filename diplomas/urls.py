@@ -17,14 +17,22 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from input_matrix_web import views as inmatweb
 from load_matrix import views as load
-from django.conf import settings
-from django.conf.urls.static import static
-
+from diplomas.views import *
+from forms.forms import *
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'set_sizes$', inmatweb.set_sizes),
     url(r'^set_matrix$', inmatweb.set_matrix),
     url(r'^load$', load.upload_file),
-    url(r'^set_subsystem$', load.set_subsystem),
+    url(r'^files/data.xls$', load.download_file),
+    url(r'^data$', load.download_file),
+    url(r'^$', start_view),
+    url(r'accounts/login', LoginFormView.as_view()),
+    url(r'accounts/logout', LogoutView.as_view()),
+    url(r'accounts/register/', RegisterFormView.as_view()),
+    url(r'^accounts/profile/$', profile),
+    url(r'^download_PCA_file_by_id/(\d+)/$', download_PCA_file_by_id),
+    url(r'^delete_file_by_id/(\d+)/$', delete_file_by_id),
 ]
+

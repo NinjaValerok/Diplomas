@@ -1,0 +1,20 @@
+{%extends "base.html" %}
+{% load tags %}
+
+{% block head %}
+    <style>
+
+
+   </style>
+{% endblock %}
+
+{%block content %}
+    <h3> Введите название файла и выберите файл для загрузки</h3>
+		<form action="load" method="post" enctype="multipart/form-data">{% csrf_token %}
+		<table class="_my_table_style">
+			{{ form.as_table }}
+		</table>
+
+		<input type="submit" value="отправить">
+		</form>
+{%endblock %}

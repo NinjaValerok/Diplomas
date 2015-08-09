@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+    <title>Регистрация и авторизация </title>
+    <style>
+    #container input,select {
+            width: 30%;
+            text-align :left;
+            padding: 5px 0 5px 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+      {% csrf_token %}
+      <!-- as_p для того, чтобы каждый элемент формы был с новой строки -->
+      {{ form.as_p }}
+      <button type="submit"> Ok</button>
+    </form>
+
+{% endblock %}

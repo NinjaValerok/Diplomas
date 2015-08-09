@@ -1,24 +1,84 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-	<title>
-		{%block title %}
-		{%endblock %}
-	</title>
-        {% block scripts %}
-        {% endblock %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/foundation.css" %}" />
+    <style>
+       TABLE._my_table_style {
+        width: 500px; /* Ширина таблицы */
+       }
+
+       TABLE._my_table_style TD, TH {
+        text-align: left; /* Выравнивание по левому краю */
+        background: burlywood;
+        min-width: 100px;
+       }
+    input[type=submit]{
+        background: burlywood ;width: 200px
+    }
+    #container {
+        margin-left: 20%;
+        margin-top: 20px;
+    }
+    body{
+        background-color: cornsilk;
+    }
+    </style>
+{#    <script src="{% static "js/vendor/jquery.js" %}"></script>#}
+    <script type="text/javascript" src=" {% static "js/jquery.min.js" %}" ></script>
+    <script src="{% static "js/jquery-ui.min.js" %}"></script>
+    <script src="{% static "js/vendor/fastclick.js"  %}"></script>
+    <script src="{% static "js/vendor/modernizr.js"  %}"></script>
+    <script src="{% static "js/foundation.min.js"  %}"></script>
+    <script src="{% static "js/foundation/foundation.tab.js"  %}"></script>
+    {% block head %}
+    {% endblock %}
+
 </head>
 <body>
-	{% if errors %}
-		<h1> Ошибки :</h1>
-		<ul>
-			{% for error in errors %}
-				<li> {{error}} </li>
-			{% endfor %}
-		</ul>
-	{% endif %}
 
-	{%block content %}		{%endblock %}
+<div class="top-bar">
+    <section class="top-bar-section">
+        <ul class="right">
+            {% if user.is_authenticated %}
+            <li>
+                <a href="/accounts/profile/">Личный кабинет</a>
+            </li>
+            <li>
+                <a href="/accounts/logout/"> Выйти ({{ user.username }})</a>
+            </li>
+            {% else %}
+            <li>
+                <a href="/accounts/login/"> Войти </a>
+            </li>
+            <li>
+                <a href="/accounts/register/"> Зарегистрироваться</a>
+            </li>
+            {% endif %}
+        </ul>
+        <ul class="left">
+            <li>
+                <a href="/"> На главную</a>
+            </li>
+        </ul>
+    {% block top-bar %}
+    {% endblock %}
+    </section>
+</div >
+
+<div id="container">
+{% if errors %}
+    <h1> Ошибки :</h1>
+    <ul>
+        {% for error in errors %}
+            <li> {{error}} </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{%block content %}		{%endblock %}
+</div>
 
 </body>
 </html>

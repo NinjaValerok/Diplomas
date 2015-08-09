@@ -1,0 +1,14 @@
+{%extends "base.html" %}
+{% load tags %}
+{% block head %}
+    <title>Выбор способа ввода матрицы</title>
+{% endblock %}
+{%block content %}
+    <h1>
+    Выберите способ ввода данных :
+    </h1>
+    <ul>
+    <li> <a href="load" > Загрузить файл (только для зарегестрированных пользователей)</a> </li>
+    <li> <a href="set_sizes" > Ввести матрицу на сайте </a> </li>
+    </ul>
+{%endblock %}

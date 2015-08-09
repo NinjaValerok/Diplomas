@@ -1,0 +1,51 @@
+{#Контекст :#}
+{#files список классов модели для текущего пользователя#}
+{%extends "base.html" %}
+
+{% block head %}
+<title>Личный кабинет пользователя</title>
+<style>
+   table {
+{#       width: 710px; /* Ширина таблицы */#}
+       border: 1px solid darkgrey; /* Рамка вокруг таблицы */
+{#       margin: auto; /* Выравниваем таблицу по центру окна  */#}
+       min-width: 710px;
+   }
+
+  </style>
+{% endblock %}
+
+{%block content %}
+    <div id="_before_table">
+        <h2>Таблица с матрицами счетов и нагрузок</h2>
+    </div>
+
+
+
+<table class="_my_table_style">
+  <thead>
+    <tr>
+      <th >Title</th>
+      <th width="250">date and time </th>
+      <th width="150">PCA file</th>
+      <th width="150">delete file</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for file in files %}
+    <tr>
+      <td>{{ file.title }}</td>
+      <td>{{ file.load_date }}</td>
+      <td>
+          <a href="/download_PCA_file_by_id/{{ file.id }}/">download</a>
+      </td>
+      <td>
+          <a href="/delete_file_by_id/{{ file.id }}/">delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
+{% endblock %}

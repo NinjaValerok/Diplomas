@@ -1,0 +1,492 @@
+{# Шаблон для установку подсистем#}
+{#	Контекст :#}
+{#	matrix_T  - отображаемая матрица#}
+{#	matrix_P  - отображаемая матрица#}
+{#	rows_T -количество строк в матрице#}
+{#	rows_P -количество строк в матрице#}
+{#	column_in_row_T - количество столбцов в строке#}
+{#	column_in_row_P - количество столбцов в строке#}
+
+{# todo: сделать вкладкки #}
+
+{%extends "base.html" %}
+{% load staticfiles %}
+{% block head %}
+    <meta charset="utf-8">
+    <script type="text/javascript" src=" {% static "js/draw_points.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.css" %}" />
+    <style>
+        div.__analize_subsystems th, td {
+            border-top: 1px solid grey;
+            border-left: 1px solid grey;
+        }
+        div.__analize_subsystems table {
+            border-right: 1px solid grey;
+            border-bottom: 1px solid grey;
+        }
+        canvas {
+           border: 1px dashed black;
+            margin-left: 5px;
+       }
+        #feedback { font-size: 1.4em; }
+        #_subsystem_set .ui-selecting { background: #FECA40; }
+        #_subsystem_set .ui-selected { background: #F39814; color: white; }
+{#        #selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }#}
+{#        #selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }#}
+{#        #_input_subsystem_name_T {#}
+{#            width: auto;#}
+{#        }#}
+        #_subsystem_set input,select {
+            width: 20%;
+            text-align :left;
+            padding: 5px 0 5px 10px;
+        }
+    </style>
+
+{% endblock %}
+{% load tags %}
+
+{% block top-bar %}
+
+    <ul class="left tabs" data-tab>
+    <li class="active">
+        <a href="#_content_T"> Анализ матрицы счетов </a>
+    </li>
+    <li>
+        <a href="#_content_P">Анализ матрицы нагрузок</a>
+    </li>
+    </ul>
+    <ul class="left">
+    <li>
+        <a href="files/data.xls" download="data.xls"> Сохранить результат на диск</a>
+    </li>
+    </ul>
+{% endblock %}
+
+{%block content %}
+
+    <div id="_subsystem_set">
+        <div class="tabs-content">
+                <div class="content active" id="_content_T">
+                    <div id="__subsystem_set_T">
+                        <label for="selectable_T">Выделите строки входящие в подсистемы :</label>
+                        <table id="selectable_T" class="_my_table_style">
+                            {% for row in rows_T|get_range %}
+                                {% if forloop.counter == 1 %}
+                                    <tr>
+                                {% endif %}
+                                {% if row|is_new_row:'5' %}
+                                    </tr>
+                                    <tr>
+                                {% endif %}
+                                    <td class="ui-widget-content" data-row="{{ row }}">
+                                        <text>row {{ row }} : default </text>
+                                    </td>
+                            {% endfor %}
+                        </table>
+                        <label for="_choose_subsystem_name_T"> Выберите или введите имя подсистемы</label>
+                        <div id="_choose_subsystem_name_T" >
+                            <select id="_select_subsystem_name_T">
+                                <option value="default">default</option>
+                            </select>
+                            <input type="text" id="_input_subsystem_name_T">
+                        </div>
+                        <label for="_subsystem_color_T">Выберите цвет для подсистемы</label>
+                        <input type="color" id="_subsystem_color_T" value="#ff0000">
+                        <button type="button" id ="_button_subsystem_T">ok</button>
+                        <button type="button" id="_button_analyze_subsystem_T" class="__button_analyze_subsystem"> analize </button>
+                    </div>
+                    <div id="_analize_subsystems_T" class="__analize_subsystems"></div>
+                    <div class="_view_pca">
+                    <div id="_view_T">
+                        <label for="_skaling_T"> Масштаб графика</label>
+                        <input type="number" min="0" id="_skaling_T" value="1">
+                        <label for="_canvas_T">
+                            График матрицы счетов
+                        </label>
+                        <canvas id="_canvas_T" width="500" height="300" style="margin: auto"></canvas>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="content" id="_content_P">
+                    <div id="__subsystem_set_P">
+                        <label for="selectable_P">Выделите строки входящие в подсистемы :</label>
+                        <table id="selectable_P" class="_my_table_style">
+                            {% for row in rows_P|get_range %}
+                                {% if forloop.counter == 1 %}
+                                    <tr>
+                                {% endif %}
+                                {% if row|is_new_row:'5' %}
+                                    </tr>
+                                    <tr>
+                                {% endif %}
+                                    <td class="ui-widget-content" data-row="{{ row }}">
+                                        <text>row {{ row }} : default </text>
+                                    </td>
+                            {% endfor %}
+                        </table>
+                        <label for="_choose_subsystem_name_P"> Выберите или введите имя подсистемы</label>
+                        <div id="_choose_subsystem_name_P">
+                            <select id="_select_subsystem_name_P">
+                                <option value="default">default</option>
+                            </select>
+                            <input type="text" id="_input_subsystem_name_P">
+                        </div>
+                        <label for="_subsystem_color_P">Выберите цвет для подсистемы</label>
+                        <input type="color" id="_subsystem_color_P" value="#ff0000">
+                        <button type="button" id ="_button_subsystem_P">ok</button>
+                        <button type="button" id="_button_analyze_subsystem_P" class="__button_analyze_subsystem"> analize </button>
+                    </div>
+                    <div id="_analize_subsystems_P" class="__analize_subsystems"></div>
+                    <div class="_view_pca">
+                        <div id="_view_P">
+                            <label for="_skaling_P">Масштаб графика</label>
+                            <input type="number" min="0" id="_skaling_P" value="1">
+                            <label for="_canvas_P">
+                                График матрицы нагрузок
+                            </label>
+                            <canvas id="_canvas_P" width="500" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+
+
+
+
+<script>
+
+    var matrix_T = {{ matrix_T }} ;
+    var matrix_P = {{ matrix_P }} ;
+    var subsystem_names_by_rows_T = []; //имена подсистем по строкам
+    var subsystem_names_by_rows_P = []; //имена подсистем по строкам
+    var subsystem_names_colors_T = {}; //клёчом выступает имя подсистемы
+    var subsystem_names_colors_P = {}; //клёчом выступает имя подсистемы
+    var skaling_T = 1;
+    var skaling_P = 1;
+    var isDrawing = false;
+    var start_x_T;
+    var start_y_T;
+    var stop_x_T;
+    var stop_y_T;
+    var start_x_P;
+    var start_y_P;
+    var stop_x_P;
+    var stop_y_P;
+
+
+    $(document).ready(function(){
+        $(document).foundation();
+        $('#_button_analyze_subsystem_T').click(function(){
+            analyze_subsystem('_analize_subsystems_T','_table_analize_T',
+                    matrix_T,subsystem_names_by_rows_T,subsystem_names_colors_T);
+        });
+
+        $('#_button_analyze_subsystem_P').click(function(){
+            analyze_subsystem('_analize_subsystems_P','_table_analize_P',
+                    matrix_P,subsystem_names_by_rows_P,subsystem_names_colors_P);
+        });
+
+
+        $('#_skaling_P').change(function(){
+            var value = $(this).val();
+            skaling_P = value;
+            draw('_canvas_P',matrix_P,skaling_P);
+        });
+
+        $('#_skaling_T').change(function(){
+            var value = $(this).val();
+            skaling_T = value;
+            draw('_canvas_T',matrix_T,skaling_T);
+        });
+
+        $('#_subsystem_set table').selectable({
+            filter: 'td'
+            }
+        );
+//------------------------------------------------------------------------
+        //подготовка данных для отображения
+        prepare_data();
+        __prepare_set_subsystem('T');
+        __prepare_set_subsystem('P');
+        skaling_T =auto_skaling('_canvas_T',matrix_T,skaling_T);
+        skaling_P =auto_skaling('_canvas_P',matrix_P,skaling_P);
+        draw('_canvas_T',matrix_T,skaling_T);
+        draw('_canvas_P',matrix_P,skaling_P);
+        $('#_skaling_T').val(skaling_T);
+        $('#_skaling_P').val(skaling_P);
+
+//-------------------------------------------------------------------------
+        //назначение слушателей для выделения точек
+        var canvas = document.getElementById('_canvas_T');
+        var context = canvas.getContext('2d');
+
+        canvas.addEventListener('mousedown', function(evt) {
+            isDrawing = true;
+            var mousePos = getMousePos(canvas, evt);
+            start_x_T = mousePos['x'];
+            start_y_T = mousePos['y'];
+          });
+
+        canvas.addEventListener('mouseup', function(evt) {
+            isDrawing = false;
+            var mousePos = getMousePos(canvas, evt);
+            stop_x_T = mousePos.x ;
+            stop_y_T = mousePos.y ;
+            select_subsystem(matrix_T,"#selectable_T");
+          });
+
+        var canvas_P = document.getElementById('_canvas_P');
+        var context_P = canvas_P.getContext('2d');
+        var width_P  = canvas_P.width;
+        var height_P = canvas_P.height;
+        canvas_P.addEventListener('mousedown', function(evt) {
+            var mousePos = getMousePos(canvas_P, evt);
+            start_x_P = mousePos['x'];
+            start_y_P = mousePos['y'];
+          });
+
+        canvas_P.addEventListener('mouseup', function(evt) {
+            var mousePos = getMousePos(canvas_P, evt);
+            stop_x_P = mousePos.x ;
+            stop_y_P = mousePos.y ;
+            select_subsystem_P(matrix_P,"#selectable_P");
+          });
+    });
+
+//--------------------------------------------------------------------------
+    function analyze_subsystem(element_append_id,table_id,data,subsystem_names_by_rows,subsystem_names){
+        var subsystems =[];//ключ имя подсистемы значения максимальное минимальное среднее
+        for(var system_name in subsystem_names){ //проходим по подсистемам
+            if(system_name =="")
+                continue;
+            var rows_number=[];
+
+            for( var i in subsystem_names_by_rows){ //находим строки для данный подсистемы
+                var name_row = subsystem_names_by_rows[i];
+                if(system_name == name_row){
+                    rows_number.push(i);
+                }
+            }
+            //для подсистемы находим ключевые значения
+            //---------------------------------------------------------
+            var min_row =  rows_number[0];
+            var max_row =rows_number[0];
+            var min=data[rows_number[0]].x +data[rows_number[0]].y;
+            var max=min;
+            var average=0;
+            for(var i in rows_number){
+                var value= data[rows_number[i]].x +data[rows_number[i]].y;
+                average+=value;
+                if(min > value){
+                    min = value;
+                    min_row = rows_number[i];
+                }
+                if(max < value){
+                    max = value;
+                    max_row = rows_number[i];
+                }
+            }
+            average/=rows_number.length;
+            //---------------------------------------------------------
+            var subsystem_info = {
+                min : min,
+                max : max,
+                min_row : min_row,
+                max_row : max_row,
+                average : average
+            };
+            subsystems[system_name] = subsystem_info;
+        }
+
+        $("#"+table_id).detach();
+        var table = $('<table id="' +table_id +'" class="_my_table_style"></table> ');
+
+        var tr = $('<tr> </tr>');
+        var item = $('<th> </th>').text('subsystem name');
+        tr.append(item);
+        item = $('<th> </th>').text('min value');
+        tr.append(item);
+        item = $('<th> </th>').text('max value');
+        tr.append(item);
+        item = $('<th> </th>').text('min row');
+        tr.append(item);
+        item = $('<th> </th>').text('max row');
+        tr.append(item);
+        item = $('<th> </th>').text('average value');
+        tr.append(item);
+        table.append(tr);
+
+        for (var system in subsystems){
+            var tr = $('<tr> </tr>');
+            var item = $('<td> </td>').text(system);
+            tr.append(item);
+            for( var value in subsystems[system]){
+                var text = subsystems[system][value];
+                if( (typeof text)=="number"){
+                    text = text.toFixed(4)
+                }
+                item = $('<td> </td>').text(text);
+                tr.append(item);
+            }
+            table.append(tr);
+        }
+
+        $('#'+element_append_id).append(table);
+    };
+
+
+
+    function __prepare_set_subsystem(TorP){
+        //обработчики
+
+        //на выпадающий список
+        $('#_select_subsystem_name_'+TorP).change(function(){
+            var name = $(this).val();
+            $('#_input_subsystem_name_'+TorP).val(name);
+        });
+        //------------------------------------------------------------------------
+        //назначение подсистемы для выбранных
+        $('#_button_subsystem_'+TorP).click(function () {
+            var subsystem_name = $('#_input_subsystem_name_'+TorP).val();
+            var color = $('#_subsystem_color_'+TorP).val();
+            //проверить что имя подсистемы новое
+            //если нету,то добавляем иначе просто меняем цвет
+            if(TorP == 'T'){
+                if (!(subsystem_name in subsystem_names_colors_T)){
+                    add_name_to_selected(subsystem_name,'_select_subsystem_name_T');
+                }
+                subsystem_names_colors_T[subsystem_name] = color;
+            }
+            else{
+                if (!(subsystem_name in subsystem_names_colors_P)){
+                    add_name_to_selected(subsystem_name,'_select_subsystem_name_P');
+                }
+                subsystem_names_colors_P[subsystem_name] = color;
+            }
+
+        //--------------------------------------------------------------------------
+            //функция использует номер строки
+             $("#selectable_"+ TorP + " td.ui-selected").each(function (i, elem) {
+                 //var text = $(this).html();
+                 //var row = $(this).parent('tr').index();
+                 var row = $(this).attr('data-row');
+                 if(TorP == 'T'){
+                     matrix_T[row].color = color;
+                     var name_new = 'row ' + row + " : " + subsystem_name ;
+                     subsystem_names_by_rows_T[row] = subsystem_name;
+                     $(this).html(name_new);
+                 }
+                 else{
+                     matrix_P[row].color = color;
+                     var name_new = 'row ' + row + " : " + subsystem_name ;
+                     subsystem_names_by_rows_P[row] = subsystem_name;
+                     $(this).html(name_new);
+                 }
+            });
+            if(TorP == 'T'){
+                draw('_canvas_T',matrix_T,skaling_T );
+            }
+            else{
+                draw('_canvas_P',matrix_P,skaling_P);
+            }
+            $("#selectable_"+ TorP + " td.ui-selected").removeClass('ui-selected');
+        });
+    };
+
+
+    function add_name_to_selected(name,selected_id){
+        var x = document.getElementById(selected_id);
+        var option = document.createElement("option");
+        option.text = name;
+        x.add(option,1);
+    }
+
+    function prepare_data(){
+        var data = set_default_color_to_data(matrix_T);
+        matrix_T = data;
+        data = set_default_color_to_data(matrix_P);
+        matrix_P = data;
+    }
+
+    function set_default_color_to_data(matrix){
+        var data = [];
+        for(var i in matrix){
+            var d = {
+                x: matrix[i][0],
+                y: matrix[i][1],
+                color: 'black'
+            }
+            data.push(d);
+        }
+        return data
+    }
+
+    function getMousePos(canvas, evt) {
+      var rect = canvas.getBoundingClientRect();
+          return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+          };
+    }
+
+
+    function select_subsystem(matrix,selectable){
+        //найти точки входящие в диапозон
+        var canvas = document.getElementById('_canvas_P');
+        var weight  = canvas.width;
+        var hight = canvas.height;
+        var x_start = (start_x_T - weight/2)/skaling_T ;
+        var x_stop = (stop_x_T - weight/2)/skaling_T ;
+        var y_start = (hight/2 - start_y_T)/skaling_T ;
+        var y_stop =  (hight/2 - stop_y_T)/skaling_T ;
+        var rows = [];
+        for( var i in matrix){
+            var x = matrix[i].x;
+            var y = matrix[i].y;
+            if(( y >= y_start && y <= y_stop && x <= x_start && x >= x_stop)||
+                    (y <= y_start && y >= y_stop && x >= x_start && x <= x_stop)){ // с низу в верх
+                rows.push(i);
+            }
+        }
+         $(selectable + " td").each(function (i, elem) {
+            var row = $(this).attr('data-row');
+            if ($.inArray(row,rows) != -1){
+                $(this).addClass("ui-selected");
+            }
+         });
+    }
+
+    function select_subsystem_P(matrix,selectable){
+        //найти точки входящие в диапозон
+        var canvas = document.getElementById('_canvas_P');
+        var weight  = canvas.width;
+        var hight = canvas.height;
+        var x_start = (start_x_P - weight/2)/skaling_P;
+        var x_stop = (stop_x_P - weight/2)/skaling_P ;
+        var y_start = (hight/2 - start_y_P)/skaling_P ;
+        var y_stop =  (hight/2 - stop_y_P)/skaling_P ;
+        var rows = [];
+        for( var i in matrix){
+            var x = matrix[i].x;
+            var y = matrix[i].y;
+            if(( y >= y_start && y <= y_stop && x <= x_start && x >= x_stop)||
+                    (y <= y_start && y >= y_stop && x >= x_start && x <= x_stop)){ // с низу в верх
+                rows.push(i);
+            }
+        }
+         $(selectable + " td").each(function (i, elem) {
+            var row = $(this).attr('data-row');
+            if ($.inArray(row,rows) != -1){
+                $(this).addClass("ui-selected");
+            }
+         });
+    }
+
+</script>
+
+{%endblock %}
+
